@@ -52,6 +52,10 @@ Note that it will take a little while to start all containers. eShopOnDapr inclu
 
 When all microservices are healthy, you can navigate to http://localhost:5104 to view the eShopOnDapr UI.
 
+### Run Ansible Script
+
+ansible-playbook ansible-docker.yml -i inventory --ask-become-pass
+
 ### Attributions
 
 Model photo by  [Angelo Pantazis](https://unsplash.com/@angelopantazis?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText)  on  [Unsplash](https://unsplash.com/?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText)
