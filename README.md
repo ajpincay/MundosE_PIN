@@ -54,6 +54,7 @@ When all microservices are healthy, you can navigate to http://localhost:5104 to
 
 ### Run Ansible Script
 
+ansible-playbook ansible-docker.yml -i inventory --ask-become-pass
 
 ### Attributions
 
