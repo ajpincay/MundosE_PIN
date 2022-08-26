@@ -1,4 +1,4 @@
-- hosts: localhost
+- hosts: awsec2
   become: yes
   vars:
   tasks:
@@ -21,11 +21,6 @@
         name: docker-ce
         state: latest
         update_cache: true
-    
-# SonarQ
-# Prometheus
-# Grafana
-# Traefik
 
     - name: Install related Ubuntu packages
       apt:
