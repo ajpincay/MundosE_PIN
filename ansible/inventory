@@ -1,0 +1,1 @@
+localhost ansible_host=localhost ansible_user=s ansible_ssh_pass=.
