@@ -48,6 +48,7 @@ namespace mundosE
                 InstanceType = SIZE,
                 VpcSecurityGroupIds = { group.Id},
                 UserData = "",
+                KeyName = "devops",
                 Ami = ami.Apply(a => a.Id)
             });
 
