@@ -1,0 +1,19 @@
+apiVersion : apps/v1
+kind: Deployment
+metadata:
+  name: mundose 
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mundose
+  template:
+    metadata:
+      labels:
+        app: mundose 
+    spec:
+      containers:
+        - name: mundose 
+          image: mundose.azurecr.io/mundose
+          ports:
+          - containerPort: 80
