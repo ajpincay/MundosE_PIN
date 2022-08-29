@@ -31,15 +31,15 @@ stages:
     pool:
       vmImage: $(vmImageName)
     steps:
-    - task: Docker@2
-      displayName: Build and push an image to container registry
+
+    - task: DockerCompose@0
+      displayName: Build Docker compose and push to container registry
       inputs:
-        command: buildAndPush
-        repository: $(imageRepository)
-        dockerfile: $(dockerfilePath)
-        containerRegistry: $(dockerRegistryServiceConnection)
-        tags: |
-          $(tag)
+        containerregistrytype: 'Azure Container Registry'
+        azureSubscription: 'MSDN Platforms - Angel Pincay(2eec5738-1ae3-436d-9d7f-51977ccf2325)'
+        azureContainerRegistry: '{"loginServer":"mundose.azurecr.io", "id" : "/subscriptions/2eec5738-1ae3-436d-9d7f-51977ccf2325/resourceGroups/MundosE/providers/Microsoft.ContainerRegistry/registries/mundose"}'
+        dockerComposeFile: '**/docker-compose.yml'
+        action: 'Run a Docker Compose command'
 
     - upload: manifests
       artifact: manifests
