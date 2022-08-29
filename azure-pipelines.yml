@@ -88,5 +88,5 @@ stages:
               command: 'install'
               chartType: 'FilePath'
               chartVersion: 'deploy/k8s/helm'
-              valueFile: 'values.yaml''
+              valueFile: 'values.yaml'
 
