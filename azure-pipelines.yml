@@ -1,0 +1,60 @@
+trigger:
+- main
+
+resources:
+- repo: self
+
+variables:
+  # Agent VM image name
+  vmImageName: 'ubuntu-latest'
+
+stages:
+- stage: Build
+  displayName: Build stage
+  jobs:
+  - job: Build
+    displayName: Build
+    pool:
+      vmImage: $(vmImageName)
+    steps:
+      - task: DockerCompose@0
+        inputs:
+          containerregistrytype: 'Container Registry'
+          dockerRegistryEndpoint: 'mundose'
+          dockerComposeFile: '**/docker-compose.yml'
+          action: 'Build services'
+          includeSourceTags: true
+          includeLatestTag: true
+      - task: DockerCompose@0
+        inputs:
+          containerregistrytype: 'Container Registry'
+          dockerRegistryEndpoint: 'mundose'
+          dockerComposeFile: '**/docker-compose.yml'
+          action: 'Push services'
+          includeSourceTags: true
+          includeLatestTag: true
+
+      - task: HelmInstaller@0
+        inputs:
+          helmVersion: '2.14.1'
+          installKubectl: true
+
+      - task: HelmDeploy@0
+        inputs:
+          connectionType: 'Kubernetes Service Connection'
+          kubernetesServiceConnection: 'ajpincay-aks'
+          namespace: 'mundose'
+          command: 'login'
+
+      - task: HelmDeploy@0
+        inputs:
+          command: 'package'
+          chartPath: 'deploy/k8s/helm'
+          chartVersion: '$(Build.BuildId)'
+      
+      - task: HelmDeploy@0
+        inputs:
+          azureSubscriptionForACR: 'MSDN Platforms - Angel Pincay(2eec5738-1ae3-436d-9d7f-51977ccf2325)'
+          azureResourceGroupForACR: 'AKS'
+          command: 'save'
+          chartNameForACR: '$(ProjectName)'
