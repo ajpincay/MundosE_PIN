@@ -18,6 +18,7 @@ stages:
       vmImage: $(vmImageName)
     steps:
       - task: DockerCompose@0
+        displayName: Build Docker Images
         inputs:
           containerregistrytype: 'Container Registry'
           dockerRegistryEndpoint: 'mundose'
@@ -26,6 +27,7 @@ stages:
           includeSourceTags: true
           includeLatestTag: true
       - task: DockerCompose@0
+        displayName: Push Docker Images
         inputs:
           containerregistrytype: 'Container Registry'
           dockerRegistryEndpoint: 'mundose'
@@ -35,11 +37,13 @@ stages:
           includeLatestTag: true
 
       - task: HelmInstaller@0
+        displayName: Install Helm
         inputs:
           helmVersion: '2.14.1'
           installKubectl: true
 
       - task: HelmDeploy@0
+        displayName: Helm Login
         inputs:
           connectionType: 'Kubernetes Service Connection'
           kubernetesServiceConnection: 'ajpincay-aks'
@@ -47,12 +51,14 @@ stages:
           command: 'login'
 
       - task: HelmDeploy@0
+        displayName: Helm package
         inputs:
           command: 'package'
           chartPath: 'deploy/k8s/helm'
           chartVersion: '$(Build.BuildId)'
       
       - task: HelmDeploy@0
+        displayName: Helm push
         inputs:
           azureSubscriptionForACR: 'MSDN Platforms - Angel Pincay(2eec5738-1ae3-436d-9d7f-51977ccf2325)'
           azureResourceGroupForACR: 'AKS'
