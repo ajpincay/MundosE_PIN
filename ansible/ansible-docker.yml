@@ -1,6 +1,9 @@
 - hosts: awsec2
   become: yes
+  roles:
+      - { role: datadog.datadog, become: yes }
   vars:
+    datadog_api_key: "438a7a8e1522a4184e8bdb9c3dfb8ab4"
   tasks:
 
     - name: Update apt-get repo and cache
