@@ -56,5 +56,7 @@ stages:
         inputs:
           azureSubscriptionForACR: 'MSDN Platforms - Angel Pincay(2eec5738-1ae3-436d-9d7f-51977ccf2325)'
           azureResourceGroupForACR: 'AKS'
+          azureContainerRegistry: 'mundose.azurecr.io'
           command: 'save'
-          chartNameForACR: '$(ProjectName)'
+          chartNameForACR: 'eshop'
+          chartPathForACR: 'eshop'
