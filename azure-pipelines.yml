@@ -81,13 +81,12 @@ stages:
         deploy:
           steps:
           - task: HelmDeploy@0
-            displayName: Helm install
             inputs:
-              azureSubscriptionEndpoint: $(azureSubscriptionEndpoint)
-              azureContainerRegistry: '{"loginServer":"mundose.azurecr.io", "id" : "/subscriptions/2eec5738-1ae3-436d-9d7f-51977ccf2325/resourceGroups/MundosE/providers/Microsoft.ContainerRegistry/registries/mundose"}'
-              azureResourceGroup: $(azureResourceGroup)
-              kubernetesCluster: $(kubernetesCluster)
-              command: install
-              chartType: FilePath
-              chartPath: Application/charts/sampleapp
+              connectionType: 'Kubernetes Service Connection'
+              kubernetesServiceConnection: 'Dev-ajpincay-mundose-1661217115678'
+              namespace: 'mundose'
+              command: 'install'
+              chartType: 'FilePath'
+              chartVersion: 'deploy/k8s/helm'
+              valueFile: 'values.yaml''
 
