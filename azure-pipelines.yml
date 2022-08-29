@@ -17,6 +17,13 @@ stages:
     pool:
       vmImage: $(vmImageName)
     steps:
+
+      - task: SonarQubePrepare@5
+        inputs:
+          SonarQube: 'sonarqube'
+          scannerMode: 'MSBuild'
+          projectKey: 'PIN_DevOps_MundosE_PIN_DevOps_MundosE_AYLrhvZkzbTE3K0wLCjh'
+          projectName: 'MundosE'
       - task: DockerCompose@0
         displayName: Build Docker Images
         inputs:
