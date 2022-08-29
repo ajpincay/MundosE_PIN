@@ -67,22 +67,13 @@ stages:
       runOnce:
         deploy:
           steps:
-          - task: KubernetesManifest@0
-            displayName: Create imagePullSecret
+          - task: HelmDeploy@0
+            displayName: Helm Install
             inputs:
-              action: createSecret
-              secretName: $(imagePullSecret)
-              dockerRegistryEndpoint: $(dockerRegistryServiceConnection)
-
-          - task: KubernetesManifest@0
-            displayName: Deploy to Kubernetes cluster
-            inputs:
-              action: deploy
-              manifests: |
-                $(Pipeline.Workspace)/manifests/deployment.yml
-                $(Pipeline.Workspace)/manifests/service.yml
-              imagePullSecrets: |
-                $(imagePullSecret)
-              containers: |
-                $(containerRegistry)/$(imageRepository):$(tag)
+              azureSubscriptionEndpoint: $(azureSubscriptionEndpoint)
+              azureResourceGroup: $(azureResourceGroup)
+              kubernetesCluster: $(kubernetesCluster)
+              command: install
+              chartType: FilePath
+              chartPath: deploy/k8s/helm
 
