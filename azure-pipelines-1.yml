@@ -63,6 +63,17 @@ stages:
         chartPath: 'deploy/k8s/helm'
         chartVersion: '$(Build.BuildId)'
 
+    - task: HelmDeploy@0
+      inputs:
+        connectionType: 'Azure Resource Manager'
+        azureSubscription: 'MSDN Platforms - Angel Pincay(2eec5738-1ae3-436d-9d7f-51977ccf2325)'
+        azureResourceGroup: 'AKS'
+        kubernetesCluster: 'ajpincay'
+        namespace: 'mundose'
+        command: 'login'
+
+
+
     - upload: manifests
       artifact: manifests
 
