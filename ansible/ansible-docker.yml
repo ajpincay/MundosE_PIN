@@ -4,7 +4,17 @@
   tasks:
 
     - name: Update apt-get repo and cache
-      apt: update_cache=yes force_apt_get=yes cache_valid_time=3600
+      apt: update_cache=yes force_apt_get=yes cache_valid_time=3600  
+  
+    - name: Install related Ubuntu packages
+      apt:
+        name: "{{ packages }}"
+        state: latest
+      vars:
+        packages:
+          - python3
+          - python3-pip
+          - mc    
 
     - name: Add Docker GPG apt Key
       apt_key:
@@ -21,15 +31,6 @@
         name: docker-ce
         state: latest
         update_cache: true
-
-    - name: Install related Ubuntu packages
-      apt:
-        name: "{{ packages }}"
-        state: latest
-      vars:
-        packages:
-          - python3-pip
-          - mc
 
     - name: Install python packages
       pip:
@@ -56,3 +57,61 @@
         networks:
           - name: mundose_network
 
+    - name: Run PostgresSQL
+      community.docker.docker_container:
+        name: postgresql
+        image:  bitnami/postgresql:latest
+        state: started
+        restart_policy: always
+        env:
+          TZ: America/Bogota
+          ALLOW_EMPTY_PASSWORD: 'yes'
+          POSTGRESQL_USERNAME: bn_sonarqube
+          POSTGRESQL_PASSWORD: bitnami
+          POSTGRESQL_DATABASE: bitnami_sonarqube
+        ports:
+          - "5432:5432"
+        volumes:
+          - postgresql_data:/bitnami/postgresql
+        networks:
+          - name: mundose_network
+
+    - name: Run SonarQube
+      community.docker.docker_container:
+        name: sonarqube
+        image:  bitnami/sonarqube:latest
+        state: started
+        restart_policy: always
+        env:
+          TZ: America/Bogota
+          SONARQUBE_DATABASE_HOST: postgresql          
+          SONARQUBE_DATABASE_USER: bn_sonarqube
+          SONARQUBE_DATABASE_PASSWORD: bitnami
+          SONARQUBE_DATABASE_NAME: bitnami_sonarqube
+        ports:
+          - "8080:8080"
+          - "8443:8443"          
+        volumes:
+          - sonarqube_data:/bitnami/sonarqube
+        networks:
+          - name: mundose_network
+
+    # - name: Run Prometheus
+    #   community.docker.docker_container:
+    #     name: sonarqube
+    #     image:  bitnami/sonarqube:latest
+    #     state: started
+    #     restart_policy: always
+    #     env:
+    #       TZ: America/Bogota
+    #       ALLOW_EMPTY_PASSWORD: 'yes'
+    #       POSTGRESQL_USERNAME: bn_sonarqube
+    #       POSTGRESQL_PASSWORD: bitnami
+    #       POSTGRESQL_DATABASE: bitnami_sonarqube
+    #     ports:
+    #       - "8080:8080"
+    #       - "8443:8443"          
+    #     volumes:
+    #       - sonarqube_data:/bitnami/sonarqube
+    #     networks:
+    #       - name: mundose_network    
